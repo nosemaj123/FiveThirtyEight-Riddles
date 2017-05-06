@@ -1,0 +1,57 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri May  5 20:27:59 2017
+
+@author: Jameson
+"""
+
+import numpy as np
+
+ties_are_wins = False
+
+finish = 200
+races = 1000
+horses = 20
+fline = np.ones(horses) * finish
+
+percents = np.arange(0.52, 0.92, 0.02)
+wins = np.zeros(horses)
+ties = np.zeros(horses)
+
+for race in range(0,races):
+    
+    stable = np.zeros(horses)
+    
+    while np.max(stable) < 200:
+        
+        for horse in range(0,horses):
+            
+            if np.random.random() < percents[horse]:
+                
+                stable[horse] += 1
+                      
+            else:
+                
+                stable[horse] -= 1
+                      
+    congrats = np.floor(np.abs(stable / 200))
+    
+    if np.sum(congrats) == 1:
+        
+        wins += congrats
+        
+    else:
+        
+        ties += congrats
+        
+    if race % 1000 == 0:
+        
+        print(race / 1000)
+        
+if ties_are_wins:
+    
+    results = (wins + ties) / races
+    
+else:
+    
+    results = np.append(wins / races, (races - sum(wins)) / races)
