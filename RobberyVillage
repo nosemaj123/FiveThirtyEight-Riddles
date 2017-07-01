@@ -1,0 +1,48 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Jul  1 14:44:54 2017
+
+@author: Jameson
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+population = 1000
+eternity = 1000
+
+winnings = np.linspace(0,3000,31)
+cum_results = np.zeros(31)
+cum_order = np.zeros(population)
+
+for year in range(eternity):
+
+    bowl = np.linspace(0,population-1,population)
+    town = 100 * np.ones(population)
+    order = np.zeros(population)
+    
+    for pick in range(population):
+        
+        tind = np.random.randint(0,np.size(bowl))
+        thief = int(bowl[tind])
+        bowl = np.delete(bowl,tind)
+        order[pick] = thief
+        victim = np.random.randint(0,population)
+        while victim == thief: victim = np.random.randint(0,population)
+        
+        town[thief] += town[victim]
+        town[victim] = 0
+
+    for safe in range(population):
+        
+        cum_results[town[safe] == winnings] += 1
+        cum_order[safe] += town[int(order[safe])]
+        
+    print(year)
+
+cum_results = cum_results / (population * eternity)
+order_exp = cum_order / eternity
+plt.figure(1)
+plt.plot(order_exp)
+plt.figure(2)
+plt.plot(winnings,cum_results)
